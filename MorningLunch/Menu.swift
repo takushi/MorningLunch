@@ -59,7 +59,7 @@ class PancakeHouseMenu: Menu {
   }
   
   /**
-  イテレータを取得します
+  イテレータを作成します
   
   - returns: イテレータ
   */
@@ -163,7 +163,7 @@ class DinerMenu: Menu {
   }
   
   /**
-  イテレータを取得します
+  イテレータを作成します
   
   - returns: イテレータ
   */
@@ -176,7 +176,6 @@ class DinerMenu: Menu {
 class DinerMenuIterator: Iterator {
   /// 食堂メニュー
   let items: [MenuItem]
-  
   /// イテレータの位置
   var position: Int
   
@@ -199,6 +198,93 @@ class DinerMenuIterator: Iterator {
   */
   func next() -> AnyObject {
     let menuItem: MenuItem = self.items[position]
+    self.position += 1
+    return menuItem
+  }
+  
+  /**
+  反復処理を行う食堂メニューがあるか示します
+  
+  - returns: trueなら食堂メニューがあり、falseならありません
+  */
+  func hasNext() -> Bool {
+    if self.position >= self.items.count {
+      return false
+    } else {
+      return true
+    }
+  }
+}
+
+/// カフェのメニュー
+class CafeMenu: Menu {
+  private var menuItems: [String: MenuItem]
+  
+  /**
+  イニシャライザ
+  
+  - returns: カフェのメニュー
+  */
+  init() {
+    self.menuItems = [:]
+    
+    self.addItem("野菜バーガーとフライドポテト", description: "全粒小麦パンにレタスとトマトをはさんだ野菜バーガーとフライドポテト", vegetarian: true, price: 3.99)
+    self.addItem("本日のスープ", description: "サラダがついた本日のスープ", vegetarian: false, price: 3.69)
+    self.addItem("ブリトー", description: "インゲン豆、サルサ、グアカモーレ入りの大きなブリトー", vegetarian: true, price: 4.29)
+  }
+  
+  /**
+  メニューを追加します
+  
+  - parameter name:       名前
+  - parameter decription: 説明
+  - parameter vegetarian: 菜食主義
+  - parameter price:      価格
+  */
+  private func addItem(name: String
+    , description: String
+    , vegetarian: Bool
+    , price: Double) {
+      let menuItem: MenuItem = MenuItem(name: name, description: description, vegetarian: vegetarian, price: price)
+      self.menuItems[menuItem.name] = menuItem
+  }
+  
+  /**
+  イテレータを作成します
+  
+  - returns: イテレータ
+  */
+  func createIterator() -> Iterator {
+    return CafeMenuIterator(items: self.menuItems)
+  }
+}
+
+/// カフェメニューのイテレータ
+class CafeMenuIterator: Iterator {
+  /// カフェメニュー
+  let items: [String: MenuItem]
+  /// イテレータの位置
+  var position: Int
+  
+  /**
+  イニシャライザ
+  
+  - parameter items: カフェメニュー
+  
+  - returns: イテレータ
+  */
+  init(items: [String: MenuItem]) {
+    self.items = items
+    self.position = 0
+  }
+  
+  /**
+  次のカフェメニューを取得します
+  
+  - returns: 次のカフェメニュー
+  */
+  func next() -> AnyObject {
+    let menuItem:MenuItem = Array(self.items.values.enumerate())[self.position].element
     self.position += 1
     return menuItem
   }

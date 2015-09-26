@@ -8,9 +8,11 @@
 
 import Foundation
 
-let pancakeMenu = PancakeHouseMenu()
-let dinerMenu = DinerMenu()
+let pancakeMenu: PancakeHouseMenu = PancakeHouseMenu()
+let dinerMenu: DinerMenu = DinerMenu()
+let cafeMenu: CafeMenu = CafeMenu()
 
-let alice: Waitress = Waitress(pancakeHouseMenu: pancakeMenu, dinerMenu: dinerMenu)
-alice.printmMenu()
+//let alice: Waitress = Waitress(pancakeHouseMenu: pancakeMenu, dinerMenu: dinerMenu, cafeMenu: cafeMenu)
+let alice: Waitress = Waitress(menus: [pancakeMenu, dinerMenu, cafeMenu])
+alice.printMenu()
 

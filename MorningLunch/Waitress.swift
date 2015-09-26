@@ -11,34 +11,63 @@ import Foundation
 
 /// ウェイトレス
 class Waitress {
-  /// パンケーキのメニュー
-  let pancakeHouseMenu: Menu
-  /// 食堂のメニュー
-  let dinerMenu: Menu
+//  /// パンケーキのメニュー
+//  let pancakeHouseMenu: Menu
+//  /// 食堂のメニュー
+//  let dinerMenu: Menu
+//  /// カフェのメニュー
+//  let cafeMenu: Menu
+//  
+//  /**
+//  イニシャライザ
+//  
+//  - parameter pancakeHouse: パンケーキのメニュー
+//  - parameter dinerMenu:    食堂のメニュー
+//  
+//  - returns: ウェイトレス
+//  */
+//  init(pancakeHouseMenu: Menu, dinerMenu: Menu, cafeMenu: CafeMenu) {
+//    self.pancakeHouseMenu = pancakeHouseMenu
+//    self.dinerMenu = dinerMenu
+//    self.cafeMenu = cafeMenu
+//  }
+//  
+//  /**
+//  メニューのすべてを出力します
+//  */
+//  func printmMenu() {
+//    let pancakeIterator: Iterator = self.pancakeHouseMenu.createIterator()
+//    let dinerIterator: Iterator = self.dinerMenu.createIterator()
+//    let cafeIterator: Iterator = self.cafeMenu.createIterator()
+//    
+//    print("メニュー\n----\n朝食")
+//    self.printMenu(pancakeIterator)
+//    print("\n昼食")
+//    self.printMenu(dinerIterator)
+//    print("\n夕食")
+//    self.printMenu(cafeIterator)
+//  }
+  /// メニュー
+  private let menus: [Menu]
   
   /**
   イニシャライザ
   
-  - parameter pancakeHouse: パンケーキのメニュー
-  - parameter dinerMenu:    食堂のメニュー
+  - parameter menus: メニュー
   
   - returns: ウェイトレス
   */
-  init(pancakeHouseMenu: Menu, dinerMenu: Menu) {
-    self.pancakeHouseMenu = pancakeHouseMenu
-    self.dinerMenu = dinerMenu
+  init(menus: [Menu]) {
+    self.menus = menus
   }
   
   /**
   メニューのすべてを出力します
   */
-  func printmMenu() {
-    let pancakeIterator: Iterator = self.pancakeHouseMenu.createIterator()
-    let dinerIterator: Iterator = self.dinerMenu.createIterator()
-    print("メニュー\n----\n朝食")
-    self.printMenu(pancakeIterator)
-    print("\n昼食")
-    self.printMenu(dinerIterator)
+  func printMenu() {
+    for menu in self.menus {
+      self.printMenu(menu.createIterator())
+    }
   }
   
   /**
