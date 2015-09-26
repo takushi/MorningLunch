@@ -8,5 +8,9 @@
 
 import Foundation
 
-print("Hello, World!")
+let pancakeMenu = PancakeHouseMenu()
+let dinerMenu = DinerMenu()
+
+let alice: Waitress = Waitress(pancakeHouseMenu: pancakeMenu, dinerMenu: dinerMenu)
+alice.printmMenu()
 
