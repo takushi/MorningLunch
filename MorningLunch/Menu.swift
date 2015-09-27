@@ -8,158 +8,200 @@
 
 import Foundation
 
-// MARK: - Menu -
-/**
-*  メニュー
-*/
-protocol Menu {
-  
-  /**
-  イテレータを作成します
-  
-  - returns: イテレータ
-  */
-  func createIterator() -> Iterator
-}
-
-// MARK: - パンケーキ -
-/// パンケーキのメニュー
-class PancakeHouseMenu: Menu {
-  /// メニュー
-  private var menuItems: Array<AnyObject>
-  
+/// メニューコンポーネント
+class MenuComponent {
   /**
   イニシャライザ
   
-  - returns: パンケーキのメニュー
+  - returns: 使用禁止
+  
+  - throws: 抽象クラスはインスタンス化できません
   */
   init() {
-    self.menuItems = Array()
-    
-    self.addItem("K&Bのパンケーキ朝食", description: "スクランブルエッグとトーストが付いたパンケーキ", vegetarian: true, price: 2.99)
-    self.addItem("通常のパンケーキ朝食", description: "卵焼きとソーセージが付いたパンケーキ", vegetarian: false, price: 2.99)
-    self.addItem("ブルーベリーパンケーキ", description: "新鮮なブルーベリーで作ったパンケーキ", vegetarian: true, price: 3.49)
-    self.addItem("ワッフル", description: "ブルーベリーか苺の好きな方をのせたワッフル", vegetarian: true, price: 3.59)
+    if (self.dynamicType === MenuComponent.self) {
+      fatalError("Abstract Class")
+    }
   }
   
   /**
-  メニューを追加します
+  メニューコンポーネントを追加します
   
-  - parameter name:       名前
-  - parameter decription: 説明
-  - parameter vegetarian: 菜食主義
-  - parameter price:      価格
+  - parameter menuComponent: メニューコンポーネント
+  
+  - throws: 抽象メソッドは呼び出せません
   */
-  private func addItem(name: String
-    , description: String
-    , vegetarian: Bool
-    , price: Double) {
-      let menuItem: MenuItem = MenuItem(name: name, description: description, vegetarian: vegetarian, price: price)
-      self.menuItems.append(menuItem)
+  func add(menuComponent: MenuComponent) {
+    fatalError("Abstract Class")
   }
   
   /**
-  イテレータを作成します
+  メニューコンポーネントを削除します
   
-  - returns: イテレータ
+  - parameter menuComponent: メニューコンポーネント
+  
+  - throws: 抽象メソッドは呼び出せません
   */
-  func createIterator() -> Iterator {
-    return PancakeHouseIterator(items: self.menuItems)
+  func remove(menuComponent: MenuComponent) {
+    fatalError("Abstract Class")
   }
-}
+  
+  /**
+  メニューコンポーネントを取得します
+  
+  - parameter i: インデックス
+  */
+  func getChild(i: Int) -> MenuComponent {
+    fatalError("Abstract Class")
+  }
+  
+  /**
+  名前
+  
+  - throws: 抽象メソッドは呼び出せません
+  */
+  func getName() -> String {
+    fatalError("Abstract Class")
+  }
+  
+  /**
+  説明
+  
+  - throws: 抽象メソッドは呼び出せません
+  */
+  func getDescription() -> String {
+    fatalError("Abstract Class")
+  }
+  
+  /**
+  価格
+  
+  - throws: 抽象メソッドは呼び出せません
+  */
+  func getPrice() -> Double {
+    fatalError("Abstract Class")
+  }
 
-/// パンケーキメニューのイテレータ
-class PancakeHouseIterator: Iterator {
-  /// パンケーキメニュー
-  let items: Array<AnyObject>
-  
-  /// イテレータの位置
-  var position: Int
-  
   /**
-  イニシャライザ
+  菜食主義
   
-  - parameter items: パンケーキメニュー
-  
-  - returns: パンケーキメニューのイテレータ
+  - throws: 抽象メソッドは呼び出せません
   */
-  init(items: Array<AnyObject>) {
-    self.items    = items
-    self.position = 0
+  func isVegetarioan() -> Bool {
+    fatalError("Abstract Class")
   }
   
   /**
-  次のパンケーキメニューを取得します
+  出力します
   
-  - returns: 次の食堂メニュー
+  - throws: 抽象メソッドは呼び出せません
   */
-  func next() -> AnyObject {
-    let menuItem: MenuItem = self.items[position] as! MenuItem
-    self.position += 1
-    return menuItem
+  func printMenu() {
+    fatalError("Abstract Class")
   }
   
   /**
-  反復処理を行い食堂メニューがあるか示します
+  同じメニューコンポーネントか
   
-  - returns: trueなら食堂メニューがあり、falseならありません
+  - parameter menu1: メニューコンポーネント
+  - parameter menu2: メニューコンポーネント
+  
+  - returns: 同じならTrue、違えばFalse
   */
-  func hasNext() -> Bool {
-    if self.position >= self.items.count {
-      return false
-    } else {
+  private func Equal(x: MenuComponent, y: MenuComponent) -> Bool {
+    if x.getName() == y.getName() {
       return true
+    } else {
+      return false
     }
   }
 }
 
-// MARK: - 食堂 -
-/// 食堂のメニュー
-class DinerMenu: Menu {
-  /// メニューの最大個数
-  private let MAX_ITEMS: Int
-  
-  /// メニューの数
-  private var numberOfItems: Int
-  
+/// メニュー
+class Menu: MenuComponent {
   /// メニュー
-  private var menuItems: [MenuItem]
+  private var menuComponents: [MenuComponent]
+  /// 名前
+  private let name: String
+  /// 説明
+  private let description: String
   
   /**
   イニシャライザ
   
-  - returns: 食堂のメニュー
+  - parameter name:        名前
+  - parameter description: 説明
+  
+  - returns: メニュー
   */
-  init() {
-    self.MAX_ITEMS = 6
-    self.numberOfItems = 0
-    self.menuItems = []
-    
-    self.addItem("ベジタリアンBLT", description: "レタス、トマト、（偽）ベーコンをはさんだ全粒小麦パンサンドイッチ", vegetarian: true, price: 2.99)
-    self.addItem("BLT", description: "レタス、トマト、ベーコンをはさんだ全粒小麦パンサンドイッチ", vegetarian: false, price: 2.99)
-    self.addItem("本日のスープ", description: "ポテトサラダを添えた本日のスープ", vegetarian: false, price: 3.29)
-    self.addItem("HotDog", description: "ザワークラウト、レリッシュ、玉ねぎ、チーズを挟んだホットドッグ", vegetarian: false, price: 3.05)
+  init(name: String, description: String) {
+    self.menuComponents = []
+    self.name = name
+    self.description = description
+  }
+
+  /**
+  メニューコンポーネントを追加します
+  
+  - parameter menuComponent: メニューコンポーネント
+  */
+  override func add(menuComponent: MenuComponent) {
+    self.menuComponents.append(menuComponent)
   }
   
   /**
-  メニューを追加します
+  メニューコンポーネントを削除します
   
-  - parameter name:       名前
-  - parameter decription: 説明
-  - parameter vegetarian: 菜食主義
-  - parameter price:      価格
+  - parameter menuComponent: メニューコンポーネント
   */
-  private func addItem(name: String
-    , description: String
-    , vegetarian: Bool
-    , price: Double) {
-      let menuItem: MenuItem = MenuItem(name: name, description: description, vegetarian: vegetarian, price: price)
-      if self.numberOfItems > self.MAX_ITEMS {
-        print("すみません、メニューはいっぱいです！メニューに項目を追加できません。")
-      } else {
-        self.menuItems.append(menuItem)
-        self.numberOfItems += 1
+  override final func remove(menuComponent: MenuComponent) {
+    for i in 0...self.menuComponents.count {
+      if super.Equal(menuComponent, y: self.menuComponents[i]) {
+        self.menuComponents.removeAtIndex(i)
+        return
       }
+    }
+  }
+  
+  /**
+  メニューコンポーネントを取得します
+  
+  - parameter i: インデックス
+  */
+  override func getChild(i: Int) -> MenuComponent {
+    return self.menuComponents[i]
+  }
+  
+  /**
+  名前
+  
+  - returns: 名前
+  */
+  override func getName() -> String {
+    return self.name
+  }
+  
+  /**
+  説明
+  
+  - returns: 説明
+  */
+  override func getDescription() -> String {
+    return self.description
+  }
+  
+  /**
+  出力します
+  */
+  override func printMenu() {
+    print("\n\(self.getName())、\(self.getDescription())")
+    print("---------------")
+
+    if let iterator: Iterator = self.createIterator() {
+      while iterator.hasNext() {
+        let menu: MenuComponent = iterator.next() as! MenuComponent
+        menu.printMenu()
+      }
+    }
   }
   
   /**
@@ -167,45 +209,45 @@ class DinerMenu: Menu {
   
   - returns: イテレータ
   */
-  func createIterator() -> Iterator {
-    return DinerMenuIterator(items: self.menuItems)
+  func createIterator() -> Iterator? {
+    return MenuIterator(items: self.menuComponents)
   }
 }
 
-/// 食堂メニューのイテレータ
-class DinerMenuIterator: Iterator {
-  /// 食堂メニュー
-  let items: [MenuItem]
+/// メニューのイテレータ
+class MenuIterator: Iterator {
+  /// メニュー
+  let items: [MenuComponent]
   /// イテレータの位置
   var position: Int
   
   /**
   イニシャライザ
   
-  - parameter items: 食堂メニュー
+  - parameter items: メニュー
   
-  - returns: 食堂メニューのイテレータ
+  - returns: メニューのイテレータ
   */
-  init(items: [MenuItem]) {
+  init(items: [MenuComponent]) {
     self.items    = items
     self.position = 0
   }
   
   /**
-  次の食堂メニューを取得します
+  次のメニューを取得します
   
-  - returns: 次の食堂メニュー
+  - returns: 次のメニュー
   */
   func next() -> AnyObject {
-    let menuItem: MenuItem = self.items[position]
+    let item: MenuComponent = self.items[position]
     self.position += 1
-    return menuItem
+    return item
   }
   
   /**
-  反復処理を行う食堂メニューがあるか示します
+  反復処理を行いメニューがあるか示します
   
-  - returns: trueなら食堂メニューがあり、falseならありません
+  - returns: trueならメニューがあり、falseならありません
   */
   func hasNext() -> Bool {
     if self.position >= self.items.count {
@@ -213,92 +255,83 @@ class DinerMenuIterator: Iterator {
     } else {
       return true
     }
-  }
+  } 
 }
 
-/// カフェのメニュー
-class CafeMenu: Menu {
-  private var menuItems: [String: MenuItem]
+/// メニュー
+class MenuItem : MenuComponent {
+  /// 名前
+  private var name: String
+  /// 説明
+  private var description: String
+  /// 菜食主義
+  private var vegetarian: Bool
+  /// 価格
+  private var price: Double
   
   /**
   イニシャライザ
-  
-  - returns: カフェのメニュー
-  */
-  init() {
-    self.menuItems = [:]
-    
-    self.addItem("野菜バーガーとフライドポテト", description: "全粒小麦パンにレタスとトマトをはさんだ野菜バーガーとフライドポテト", vegetarian: true, price: 3.99)
-    self.addItem("本日のスープ", description: "サラダがついた本日のスープ", vegetarian: false, price: 3.69)
-    self.addItem("ブリトー", description: "インゲン豆、サルサ、グアカモーレ入りの大きなブリトー", vegetarian: true, price: 4.29)
-  }
-  
-  /**
-  メニューを追加します
   
   - parameter name:       名前
   - parameter decription: 説明
   - parameter vegetarian: 菜食主義
   - parameter price:      価格
+  
+  - returns: メニュー
   */
-  private func addItem(name: String
-    , description: String
-    , vegetarian: Bool
-    , price: Double) {
-      let menuItem: MenuItem = MenuItem(name: name, description: description, vegetarian: vegetarian, price: price)
-      self.menuItems[menuItem.name] = menuItem
+  init(name: String, description: String, vegetarian: Bool, price: Double) {
+    self.name        = name
+    self.description = description
+    self.vegetarian  = vegetarian
+    self.price       = price
   }
   
   /**
-  イテレータを作成します
+  名前
   
-  - returns: イテレータ
+  - returns: 名前
   */
-  func createIterator() -> Iterator {
-    return CafeMenuIterator(items: self.menuItems)
-  }
-}
-
-/// カフェメニューのイテレータ
-class CafeMenuIterator: Iterator {
-  /// カフェメニュー
-  let items: [String: MenuItem]
-  /// イテレータの位置
-  var position: Int
-  
-  /**
-  イニシャライザ
-  
-  - parameter items: カフェメニュー
-  
-  - returns: イテレータ
-  */
-  init(items: [String: MenuItem]) {
-    self.items = items
-    self.position = 0
+  override func getName() -> String {
+    return self.name
   }
   
   /**
-  次のカフェメニューを取得します
+  説明
   
-  - returns: 次のカフェメニュー
+  - returns: 説明
   */
-  func next() -> AnyObject {
-    let menuItem:MenuItem = Array(self.items.values.enumerate())[self.position].element
-    self.position += 1
-    return menuItem
+  override func getDescription() -> String {
+    return self.description
   }
   
   /**
-  反復処理を行う食堂メニューがあるか示します
+  価格
   
-  - returns: trueなら食堂メニューがあり、falseならありません
+  - returns: 価格
   */
-  func hasNext() -> Bool {
-    if self.position >= self.items.count {
-      return false
-    } else {
-      return true
+  override func getPrice() -> Double {
+    return self.price
+  }
+  
+  /**
+  菜食主義
+  
+  - returns: 菜食主義
+  */
+  override func isVegetarioan() -> Bool {
+    return self.vegetarian
+  }
+  
+  /**
+  メニューを出力します
+  */
+  override func printMenu() {
+    var menu: String = " \(self.getName())"
+    if self.isVegetarioan() {
+      menu += "(v)"
     }
+    menu += "、\(String(self.getPrice()))\n -- \(self.getDescription())"
+    
+    print(menu)
   }
 }
