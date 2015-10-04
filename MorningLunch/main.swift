@@ -40,5 +40,5 @@ cafeMenu.add(MenuItem(name: "ブリトー", description: "インゲン豆、サ�
 
 
 let alice: Waitress = Waitress(allMenus: allMenu)
-alice.printMenu()
-
+//alice.printMenu()
+alice.printVegetarianMenu()

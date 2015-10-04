@@ -100,6 +100,15 @@ class MenuComponent {
   }
   
   /**
+  イテレータを生成します
+  
+  - returns: イテレータ
+  */
+  func createIterator() -> Iterator {
+    return NullIterator()
+  }
+  
+  /**
   同じメニューコンポーネントか
   
   - parameter menu1: メニューコンポーネント
@@ -190,6 +199,15 @@ class Menu: MenuComponent {
   }
   
   /**
+  菜食主義
+  
+  - returns: 菜食主義
+  */
+  override func isVegetarioan() -> Bool {
+    return false
+  }
+  
+  /**
   出力します
   */
   override func printMenu() {
@@ -209,53 +227,9 @@ class Menu: MenuComponent {
   
   - returns: イテレータ
   */
-  func createIterator() -> Iterator? {
-    return MenuIterator(items: self.menuComponents)
+  override func createIterator() -> Iterator {
+    return MenuComponentIterator(iterator: MenuIterator(items: self.menuComponents))
   }
-}
-
-/// メニューのイテレータ
-class MenuIterator: Iterator {
-  /// メニュー
-  let items: [MenuComponent]
-  /// イテレータの位置
-  var position: Int
-  
-  /**
-  イニシャライザ
-  
-  - parameter items: メニュー
-  
-  - returns: メニューのイテレータ
-  */
-  init(items: [MenuComponent]) {
-    self.items    = items
-    self.position = 0
-  }
-  
-  /**
-  次のメニューを取得します
-  
-  - returns: 次のメニュー
-  */
-  func next() -> AnyObject {
-    let item: MenuComponent = self.items[position]
-    self.position += 1
-    return item
-  }
-  
-  /**
-  反復処理を行いメニューがあるか示します
-  
-  - returns: trueならメニューがあり、falseならありません
-  */
-  func hasNext() -> Bool {
-    if self.position >= self.items.count {
-      return false
-    } else {
-      return true
-    }
-  } 
 }
 
 /// メニュー
